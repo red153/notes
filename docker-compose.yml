@@ -1,0 +1,42 @@
+version: '3'
+services:
+
+  mongodb:
+    image: mongo:7 
+    container_name: my_mongodb
+    volumes:
+      - ./mongo/dump:/db-dump  
+      - mongodb_data103:/data/db 
+      - ./scripts:/docker-entrypoint-initdb.d/ 
+    ports:
+      - "27017:27017" 
+    environment:                          
+      MONGO_INITDB_ROOT_USERNAME: root    
+      MONGO_INITDB_ROOT_PASSWORD: example 
+    networks:
+      - practica_net
+
+  mongo-express:
+      image: mongo-express
+      container_name: my_mongo_express
+      restart: always
+      ports:
+        - "8081:8081"
+      environment:
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: example
+        ME_CONFIG_MONGODB_URL: mongodb://root:example@mongodb:27017/
+        ME_CONFIG_BASICAUTH_USERNAME: usuario
+        ME_CONFIG_BASICAUTH_PASSWORD: usuario
+      depends_on:
+        - mongodb
+      networks:
+        - practica_net
+        
+networks:
+  practica_net:
+    name: practica_net
+    driver: bridge
+
+volumes:
+  mongodb_data103:
