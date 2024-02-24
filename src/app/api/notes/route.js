@@ -5,18 +5,23 @@ import { NextResponse } from "next/server";
 export async function GET() {
   await dbConnect();
   const notes = await Note.find();
-  return NextResponse.json(notes);
+  const response = NextResponse.json(notes);
+  response.headers.set('Cache-Control', 'no-store, max-age=0');
+  return response;
 }
 
 export async function POST(request) {
   try {
     const body = await request.json();
+    await dbConnect();
     const newNote = new Note(body);
     const savedNote = await newNote.save();
-    return NextResponse.json(savedNote);
+    const response = NextResponse.json(savedNote);
+    response.headers.set('Cache-Control', 'no-store, max-age=0');
+    return response;
   } catch (error) {
-    return NextResponse.json(error.message, {
-      status: 400,
-    });
+    const response = NextResponse.json({ error: error.message }, { status: 400 });
+    response.headers.set('Cache-Control', 'no-store, max-age=0');
+    return response;
   }
 }
