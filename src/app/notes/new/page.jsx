@@ -17,6 +17,7 @@ const NewNote = () => {
     const res = await fetch(`/api/notes/${params.id}`);
     const data = await res.json();
     setNewNote({ title: data.title, description: data.description });
+    router.refresh();
   };
 
   useEffect(() => {
