@@ -2,6 +2,8 @@ import { dbConnect } from "@/utils/mongoose";
 import NoteCard from "@/components/NoteCard";
 import Note from "@/models/Note";
 
+export const dynamic = "force-dynamic";
+
 export async function loadNotes() {
   await dbConnect();
   const notes = await Note.find();
